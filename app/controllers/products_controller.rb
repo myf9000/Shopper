@@ -1,17 +1,18 @@
 class ProductsController < ApplicationController
   before_action :product_find, only: [:show, :edit, :delete, :update, :destroy]
+  before_action :authenticate_user!
 
   def index
     @products = Product.all
   end
 
   def new
-    @product = Product.new
+    @product = current_user.products.build
   end
 
   def create
     # zadanie HTTP POST - tworznie nowego productu
-    @product = Product.new(product_params)
+    @product = current_user.products.build(product_params)
     if @product.save
       redirect_to @product
     else
